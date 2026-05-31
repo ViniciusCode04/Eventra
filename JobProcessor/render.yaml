@@ -1,0 +1,75 @@
+services:
+  # API .NET
+  - type: web
+    name: eventra-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile.api
+    dockerContext: .
+    plan: free
+    healthCheckPath: /swagger/v1/swagger.json
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://+:8080
+      - key: MongoDB__ConnectionString
+        sync: false  # preencher no painel do Render
+      - key: MongoDB__DatabaseName
+        value: jobprocessor
+      - key: RabbitMQ__Host
+        sync: false  # preencher com host do CloudAMQP
+      - key: RabbitMQ__User
+        sync: false
+      - key: RabbitMQ__Password
+        sync: false
+
+  # Worker
+  - type: worker
+    name: eventra-worker
+    runtime: docker
+    dockerfilePath: ./Dockerfile.worker
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: DOTNET_SYSTEM_GLOBALIZATION_INVARIANT
+        value: "false"
+      - key: MongoDB__ConnectionString
+        sync: false
+      - key: MongoDB__DatabaseName
+        value: jobprocessor
+      - key: RabbitMQ__Host
+        sync: false
+      - key: RabbitMQ__User
+        sync: false
+      - key: RabbitMQ__Password
+        sync: false
+      - key: Smtp__Enabled
+        value: "true"
+      - key: Smtp__Host
+        value: smtp.gmail.com
+      - key: Smtp__Port
+        value: "587"
+      - key: Smtp__User
+        sync: false
+      - key: Smtp__Password
+        sync: false
+      - key: Smtp__FromEmail
+        sync: false
+      - key: Smtp__FromName
+        value: Eventra
+      - key: Smtp__UseSsl
+        value: "true"
+
+  # Frontend Eventra
+  - type: web
+    name: eventra-frontend
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          name: eventra-api
+          type: web
+          property: host
