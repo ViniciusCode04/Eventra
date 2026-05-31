@@ -9,16 +9,11 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend", policy =>
+    options.AddPolicy("AllowAll", policy =>
     {
-        policy
-            .WithOrigins(
-                "http://localhost:5173",
-                "http://localhost:3000",
-                builder.Configuration["FRONTEND_URL"] ?? "https://eventra-frontend-259f.onrender.com"
-            )
-            .AllowAnyMethod()
-            .AllowAnyHeader();
+        policy.AllowAnyOrigin()
+              .AllowAnyMethod()
+              .AllowAnyHeader();
     });
 });
 
@@ -27,10 +22,10 @@ builder.Services.AddInfrastructure(builder.Configuration);
 
 var app = builder.Build();
 
+app.UseCors("AllowAll");
+
 app.UseSwagger();
 app.UseSwaggerUI();
-
-app.UseCors("AllowFrontend");
 
 app.MapControllers();
 
