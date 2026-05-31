@@ -3,7 +3,6 @@ using JobProcessor.Domain.Entities;
 using JobProcessor.Infrastructure.Email;
 using JobProcessor.Infrastructure.Messaging;
 using JobProcessor.Infrastructure.Persistence;
-using JobProcessor.Infrastructure.Reports;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -38,11 +37,17 @@ public static class DependencyInjection
         services.AddSingleton<IConnection>(sp =>
         {
             var logger = sp.GetRequiredService<ILogger<RabbitMQPublisher>>();
+            var host = configuration["RabbitMQ:Host"] ?? "localhost";
+            var user = configuration["RabbitMQ:User"] ?? "guest";
+            var password = configuration["RabbitMQ:Password"] ?? "guest";
+            var vhost = configuration["RabbitMQ:VHost"] ?? user; // CloudAMQP usa user como vhost
+
             var factory = new ConnectionFactory
             {
-                HostName = configuration["RabbitMQ:Host"] ?? "localhost",
-                UserName = configuration["RabbitMQ:User"] ?? "guest",
-                Password = configuration["RabbitMQ:Password"] ?? "guest",
+                HostName = host,
+                UserName = user,
+                Password = password,
+                VirtualHost = vhost,
                 DispatchConsumersAsync = true
             };
 
@@ -65,7 +70,6 @@ public static class DependencyInjection
         });
 
         services.AddSingleton<IJobQueuePublisher, RabbitMQPublisher>();
-        services.AddSingleton<IReportGenerator, ReportGenerator>();
 
         services.Configure<SmtpSettings>(configuration.GetSection(SmtpSettings.SectionName));
         services.AddSingleton<IEmailSender>(sp =>
@@ -82,9 +86,7 @@ public static class DependencyInjection
     private static void ConfigureMongoDbSerialization()
     {
         if (BsonClassMap.IsClassMapRegistered(typeof(Job)))
-        {
             return;
-        }
 
         BsonSerializer.RegisterSerializer(new GuidSerializer(GuidRepresentation.Standard));
 
