@@ -1,0 +1,121 @@
+version: '3.8'
+
+x-worker-config: &worker-config
+  build:
+    context: .
+    dockerfile: Dockerfile.worker
+  environment: &worker-env
+    - DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=false
+    - MongoDB__ConnectionString=mongodb://root:root@mongodb:27017/?authSource=admin
+    - MongoDB__DatabaseName=jobprocessor
+    - RabbitMQ__Host=rabbitmq
+    - RabbitMQ__User=guest
+    - RabbitMQ__Password=guest
+    - Smtp__Enabled=true
+    - Smtp__Host=smtp.gmail.com
+    - Smtp__Port=587
+    - Smtp__User=custodiovinicius22@gmail.com
+    - Smtp__Password=brdk vycd lfuz jfxi
+    - Smtp__FromEmail=custodiovinicius22@gmail.com
+    - Smtp__FromName=JobProcessor
+    - Smtp__UseSsl=true
+  depends_on:
+    mongodb:
+      condition: service_healthy
+    rabbitmq:
+      condition: service_healthy
+  restart: unless-stopped
+
+services:
+  mongodb:
+    image: mongo:7
+    command: ["mongod", "--wiredTigerCacheSizeGB", "0.5"]
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:8080
+      - ASPNETCORE_Kestrel__Limits__MaxConcurrentConnections=1000
+      - ASPNETCORE_Kestrel__Limits__MaxConcurrentUpgradedConnections=1000
+      - ASPNETCORE_Kestrel__Limits__KeepAliveTimeout=00:02:00
+      - ASPNETCORE_Kestrel__Limits__RequestHeadersTimeout=00:01:00
+      - COMPlus_ThreadPool_ForceMinWorkerThreads=100
+      - COMPlus_ThreadPool_ForceMinCompletionPortThreads=100
+      - MongoDB__ConnectionString=mongodb://root:root@mongodb:27017/?authSource=admin
+      - MongoDB__DatabaseName=jobprocessor
+      - RabbitMQ__Host=rabbitmq
+      - RabbitMQ__User=guest
+      - RabbitMQ__Password=guest
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:8080/swagger/v1/swagger.json > /dev/null || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 20s
+    restart: unless-stopped
+
+  worker:
+    <<: *worker-config
+
+  worker-2:
+    <<: *worker-config
+
+  worker-3:
+    <<: *worker-config
+
+  worker-4:
+    <<: *worker-config
+
+  eventra:
+    build:
+      context: ../eventra
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ""
+    ports:
+      - "5173:80"
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  mongo_data:

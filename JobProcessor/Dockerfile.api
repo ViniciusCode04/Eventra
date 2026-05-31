@@ -1,0 +1,20 @@
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
+WORKDIR /app
+EXPOSE 8080
+
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+COPY . .
+RUN dotnet restore src/JobProcessor.API/JobProcessor.API.csproj
+RUN dotnet publish src/JobProcessor.API/JobProcessor.API.csproj -c Release -o /app/publish \
+    -p:PublishReadyToRun=true \
+    -p:TieredCompilation=true
+
+FROM base AS final
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
+    && rm -rf /var/lib/apt/lists/*
+COPY --from=build /app/publish .
+ENV DOTNET_EnableDiagnostics=0 \
+    DOTNET_ReadyToRun=1
+ENTRYPOINT ["dotnet", "JobProcessor.API.dll"]

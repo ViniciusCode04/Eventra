@@ -1,0 +1,11 @@
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Domain\bin\Debug\net8.0\JobProcessor.Domain.deps.json
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Domain\bin\Debug\net8.0\JobProcessor.Domain.dll
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Domain\bin\Debug\net8.0\JobProcessor.Domain.pdb
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Domain\obj\Debug\net8.0\JobProcessor.Domain.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Domain\obj\Debug\net8.0\JobProcessor.Domain.AssemblyInfoInputs.cache
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Domain\obj\Debug\net8.0\JobProcessor.Domain.AssemblyInfo.cs
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Domain\obj\Debug\net8.0\JobProcessor.Domain.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Domain\obj\Debug\net8.0\JobProcessor.Domain.dll
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Domain\obj\Debug\net8.0\refint\JobProcessor.Domain.dll
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Domain\obj\Debug\net8.0\JobProcessor.Domain.pdb
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Domain\obj\Debug\net8.0\ref\JobProcessor.Domain.dll

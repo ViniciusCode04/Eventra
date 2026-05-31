@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stress test — JobProcessor API</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: system-ui, sans-serif;
+      background: #0a0a0f;
+      color: #e5e7eb;
+      margin: 0;
+      padding: 2rem;
+      line-height: 1.5;
+    }
+    h1 { color: #00d4ff; font-size: 1.5rem; margin-bottom: 0.25rem; }
+    p.sub { color: #6b7280; margin-top: 0; margin-bottom: 1.5rem; }
+    label { display: block; font-size: 0.85rem; color: #9ca3af; margin-bottom: 0.35rem; }
+    input, select, textarea {
+      width: 100%;
+      background: #12121a;
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #fff;
+      border-radius: 8px;
+      padding: 0.6rem 0.75rem;
+      margin-bottom: 1rem;
+      font-family: inherit;
+    }
+    textarea { min-height: 120px; font-family: ui-monospace, monospace; font-size: 0.85rem; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    button {
+      background: linear-gradient(135deg, #00d4ff, #7b2fff);
+      border: none;
+      color: #fff;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-right: 0.5rem;
+    }
+    button:disabled { opacity: 0.5; cursor: not-allowed; }
+    button.secondary {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+    #log {
+      margin-top: 1.5rem;
+      background: #12121a;
+      border: 1px solid rgba(0,212,255,0.2);
+      border-radius: 8px;
+      padding: 1rem;
+      max-height: 320px;
+      overflow-y: auto;
+      font-family: ui-monospace, monospace;
+      font-size: 0.8rem;
+      white-space: pre-wrap;
+    }
+    .ok { color: #22c55e; }
+    .err { color: #ef4444; }
+    a { color: #00d4ff; }
+  </style>
+</head>
+<body>
+  <h1>Stress test da API</h1>
+  <p class="sub">
+    Dispara várias requisições em paralelo (complementa o
+    <a href="/swagger/" target="_blank">Swagger</a> ou
+    <a href="http://localhost:5000/swagger" target="_blank">Swagger direto (:5000)</a>).
+  </p>
+
+  <div class="row">
+    <div>
+      <label for="count">Quantidade de requisições</label>
+      <input id="count" type="number" min="1" max="500" value="20" />
+    </div>
+    <div>
+      <label for="concurrency">Concorrência (paralelas)</label>
+      <input id="concurrency" type="number" min="1" max="100" value="10" />
+    </div>
+  </div>
+
+  <label for="endpoint">Endpoint</label>
+  <select id="endpoint">
+    <option value="create-report">POST /api/jobs — Gerar relatório (rápido)</option>
+    <option value="create-email">POST /api/jobs — Enviar e-mail</option>
+    <option value="list">GET /api/jobs — Listar jobs</option>
+  </select>
+
+  <label for="payload">Corpo JSON (POST)</label>
+  <textarea id="payload">{
+  "type": "GerarRelatorio",
+  "payload": {
+    "reportName": "StressTest",
+    "format": "pdf"
+  }
+}</textarea>
+
+  <div>
+    <button id="run">Executar stress test</button>
+    <button id="stop" class="secondary" disabled>Parar</button>
+    <button id="clear" class="secondary">Limpar log</button>
+  </div>
+
+  <div id="log"></div>
+
+  <script>
+    const logEl = document.getElementById('log');
+    const runBtn = document.getElementById('run');
+    const stopBtn = document.getElementById('stop');
+    let aborted = false;
+
+    const presets = {
+      'create-report': {
+        method: 'POST',
+        url: '/api/jobs',
+        body: {
+          type: 'GerarRelatorio',
+          payload: { reportName: 'StressTest', format: 'pdf' }
+        }
+      },
+      'create-email': {
+        method: 'POST',
+        url: '/api/jobs',
+        body: {
+          type: 'EnviarEmail',
+          payload: { to: 'teste@exemplo.com', subject: 'Stress test' }
+        }
+      },
+      list: { method: 'GET', url: '/api/jobs' }
+    };
+
+    document.getElementById('endpoint').addEventListener('change', (e) => {
+      const p = presets[e.target.value];
+      if (p.body) {
+        document.getElementById('payload').value = JSON.stringify(p.body, null, 2);
+      }
+    });
+
+    function log(msg, cls) {
+      const line = document.createElement('div');
+      if (cls) line.className = cls;
+      line.textContent = msg;
+      logEl.appendChild(line);
+      logEl.scrollTop = logEl.scrollHeight;
+    }
+
+    async function oneRequest(i, config) {
+      const t0 = performance.now();
+      try {
+        const opts = { method: config.method, headers: {} };
+        if (config.method === 'POST') {
+          opts.headers['Content-Type'] = 'application/json';
+          opts.body = document.getElementById('payload').value;
+        }
+        const res = await fetch(config.url, opts);
+        const ms = Math.round(performance.now() - t0);
+        if (!res.ok) {
+          const text = await res.text();
+          log(`#${i} ERRO ${res.status} (${ms} ms) — ${text.slice(0, 120)}`, 'err');
+          return false;
+        }
+        log(`#${i} OK ${res.status} (${ms} ms)`, 'ok');
+        return true;
+      } catch (err) {
+        const ms = Math.round(performance.now() - t0);
+        log(`#${i} FALHA (${ms} ms) — ${err.message}`, 'err');
+        return false;
+      }
+    }
+
+    async function runPool(total, concurrency, config) {
+      let next = 1;
+      let ok = 0;
+      let fail = 0;
+      const started = performance.now();
+
+      async function worker() {
+        while (!aborted) {
+          const i = next++;
+          if (i > total) break;
+          const success = await oneRequest(i, config);
+          if (success) ok++; else fail++;
+        }
+      }
+
+      const workers = Array.from({ length: Math.min(concurrency, total) }, () => worker());
+      await Promise.all(workers);
+
+      const elapsed = Math.round(performance.now() - started);
+      log(`\nConcluído: ${ok} OK, ${fail} falhas, ${elapsed} ms total${aborted ? ' (interrompido)' : ''}`);
+    }
+
+    runBtn.addEventListener('click', async () => {
+      aborted = false;
+      runBtn.disabled = true;
+      stopBtn.disabled = false;
+      const count = Math.min(500, Math.max(1, Number(document.getElementById('count').value) || 1));
+      const concurrency = Math.min(100, Math.max(1, Number(document.getElementById('concurrency').value) || 1));
+      const endpoint = document.getElementById('endpoint').value;
+      const config = presets[endpoint];
+      log(`Iniciando ${count} requisições (${concurrency} em paralelo) → ${config.method} ${config.url}`);
+      await runPool(count, concurrency, config);
+      runBtn.disabled = false;
+      stopBtn.disabled = true;
+    });
+
+    stopBtn.addEventListener('click', () => {
+      aborted = true;
+      stopBtn.disabled = true;
+      log('Interrompendo após requisições em andamento…');
+    });
+
+    document.getElementById('clear').addEventListener('click', () => {
+      logEl.innerHTML = '';
+    });
+  </script>
+</body>
+</html>

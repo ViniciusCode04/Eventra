@@ -1,0 +1,15 @@
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\bin\Debug\net8.0\JobProcessor.Application.deps.json
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\bin\Debug\net8.0\JobProcessor.Application.dll
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\bin\Debug\net8.0\JobProcessor.Application.pdb
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\bin\Debug\net8.0\JobProcessor.Domain.dll
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\bin\Debug\net8.0\JobProcessor.Domain.pdb
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\obj\Debug\net8.0\JobProcessor.Application.csproj.AssemblyReference.cache
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\obj\Debug\net8.0\JobProcessor.Application.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\obj\Debug\net8.0\JobProcessor.Application.AssemblyInfoInputs.cache
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\obj\Debug\net8.0\JobProcessor.Application.AssemblyInfo.cs
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\obj\Debug\net8.0\JobProcessor.Application.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\obj\Debug\net8.0\JobProce.8945DDFC.Up2Date
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\obj\Debug\net8.0\JobProcessor.Application.dll
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\obj\Debug\net8.0\refint\JobProcessor.Application.dll
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\obj\Debug\net8.0\JobProcessor.Application.pdb
+C:\Users\Administrator\Desktop\F360\JobProcessor\src\JobProcessor.Application\obj\Debug\net8.0\ref\JobProcessor.Application.dll
