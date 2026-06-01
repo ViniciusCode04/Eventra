@@ -75,8 +75,6 @@ public static class DependencyInjection
 
         services.Configure<SmtpSettings>(configuration.GetSection(SmtpSettings.SectionName));
 
-        services.AddHttpClient();
-
         services.AddSingleton<IEmailSender>(sp =>
         {
             var sendGridApiKey = configuration["SendGrid:ApiKey"];
