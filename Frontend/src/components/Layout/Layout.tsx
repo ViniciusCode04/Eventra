@@ -1,15 +1,36 @@
+import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Sidebar } from './Sidebar';
 import { TechBackground } from '../TechBackground';
 import { SystemBar } from '../SystemBar';
 
 export function Layout() {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   return (
     <div className="min-h-screen relative">
       <TechBackground />
-      <Sidebar />
-      <main className="relative z-10 ml-64 min-h-screen p-6 lg:p-8 xl:p-10">
-        <SystemBar />
+
+      {/* Overlay mobile */}
+      <AnimatePresence>
+        {sidebarOpen && (
+          <motion.div
+            key="overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-30 md:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+      </AnimatePresence>
+
+      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      <main className="relative z-10 md:ml-64 min-h-screen p-4 sm:p-6 lg:p-8 xl:p-10">
+        <SystemBar onMenuOpen={() => setSidebarOpen(true)} />
         <Outlet />
       </main>
 

@@ -74,10 +74,24 @@ public static class DependencyInjection
         services.AddScoped<IReportGenerator, ReportGenerator>();
 
         services.Configure<SmtpSettings>(configuration.GetSection(SmtpSettings.SectionName));
+
+        services.AddHttpClient();
+
         services.AddSingleton<IEmailSender>(sp =>
         {
-            var settings = sp.GetRequiredService<IOptions<SmtpSettings>>().Value;
-            return settings.IsConfigured
+            var sendGridApiKey = configuration["SendGrid:ApiKey"];
+
+            if (!string.IsNullOrWhiteSpace(sendGridApiKey))
+            {
+                var fromEmail = configuration["SendGrid:FromEmail"] ?? string.Empty;
+                var fromName = configuration["SendGrid:FromName"] ?? "Eventra";
+                var logger = sp.GetRequiredService<ILogger<SendGridEmailSender>>();
+
+                return new SendGridEmailSender(sendGridApiKey, fromEmail, fromName, logger);
+            }
+
+            var smtpSettings = sp.GetRequiredService<IOptions<SmtpSettings>>().Value;
+            return smtpSettings.IsConfigured
                 ? ActivatorUtilities.CreateInstance<SmtpEmailSender>(sp)
                 : ActivatorUtilities.CreateInstance<MockEmailSender>(sp);
         });

@@ -32,7 +32,8 @@ export function JobTable({ jobs }: JobTableProps) {
       animate={{ opacity: 1 }}
       className="tech-panel overflow-hidden corner-brackets"
     >
-      <div className="overflow-x-auto">
+      {/* Tabela — visível apenas em md+ */}
+      <div className="hidden md:block overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-white/[0.06] text-left text-gray-500 uppercase text-[10px] tracking-[0.15em] bg-eventra-dark/30">
@@ -72,6 +73,52 @@ export function JobTable({ jobs }: JobTableProps) {
             ))}
           </tbody>
         </table>
+      </div>
+
+      {/* Cards mobile — visível apenas em < md */}
+      <div className="md:hidden divide-y divide-white/[0.04]">
+        {jobs.map((job, i) => (
+          <motion.div
+            key={job.id}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: i * 0.04 }}
+          >
+            <Link
+              to={`/jobs/${job.id}`}
+              className="block p-4 hover:bg-white/[0.02] transition-colors"
+            >
+              <div className="flex items-start justify-between gap-3 mb-3">
+                <div className="min-w-0">
+                  <p className="text-eventra-cyan font-mono text-xs truncate">
+                    {truncateId(job.id)}
+                  </p>
+                  <p className="font-medium text-gray-200 mt-0.5 text-sm">
+                    {formatJobType(job.type)}
+                  </p>
+                </div>
+                <StatusBadge status={job.status} size="sm" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-x-4 gap-y-1">
+                <div>
+                  <p className="text-[9px] text-gray-600 uppercase tracking-wide">Tentativas</p>
+                  <p className="text-xs font-mono text-gray-400">{job.retryCount}</p>
+                </div>
+                <div>
+                  <p className="text-[9px] text-gray-600 uppercase tracking-wide">Criado em</p>
+                  <p className="text-xs font-mono text-gray-400">{formatDate(job.createdAt)}</p>
+                </div>
+                {job.updatedAt && (
+                  <div className="col-span-2">
+                    <p className="text-[9px] text-gray-600 uppercase tracking-wide">Atualizado em</p>
+                    <p className="text-xs font-mono text-gray-400">{formatDate(job.updatedAt)}</p>
+                  </div>
+                )}
+              </div>
+            </Link>
+          </motion.div>
+        ))}
       </div>
     </motion.div>
   );

@@ -104,145 +104,158 @@ export function CreateJobModal({ open, onClose }: CreateJobModalProps) {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 pointer-events-none"
+            className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 pointer-events-none"
           >
             <div
-              className="tech-panel corner-brackets w-full max-w-lg p-6 pointer-events-auto border border-eventra-cyan/20"
+              className="tech-panel corner-brackets w-full sm:max-w-lg pointer-events-auto border border-eventra-cyan/20 rounded-t-2xl sm:rounded-2xl max-h-[90vh] overflow-y-auto"
               style={{ boxShadow: '0 0 60px rgba(0,212,255,0.12)' }}
               onClick={(e) => e.stopPropagation()}
             >
-              <h2 className="text-xl font-bold gradient-text mb-1">Novo job</h2>
-              <p className="text-xs text-gray-500 mb-6">Preencha os dados abaixo para criar um novo job.</p>
-
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm text-gray-400 mb-1.5">Tipo</label>
-                  <select
-                    className="input-glass"
-                    value={form.type}
-                    onChange={(e) =>
-                      setForm({ ...form, type: e.target.value as JobType })
-                    }
-                  >
-                    <option value="EnviarEmail">Enviar E-mail</option>
-                    <option value="GerarRelatorio">Gerar Relatório</option>
-                  </select>
+              <div className="p-5 sm:p-6">
+                {/* Handle bar mobile */}
+                <div className="flex justify-center mb-4 sm:hidden">
+                  <div className="w-10 h-1 rounded-full bg-white/20" />
                 </div>
 
-                {form.type === 'EnviarEmail' ? (
-                  <>
-                    <div>
-                      <label className="block text-sm text-gray-400 mb-1.5">Para</label>
-                      <input
-                        type="email"
-                        className="input-glass"
-                        placeholder="usuario@email.com"
-                        value={form.to}
-                        onChange={(e) => setForm({ ...form, to: e.target.value })}
-                      />
-                      {errors.to && (
-                        <p className="text-red-400 text-xs mt-1">{errors.to}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm text-gray-400 mb-1.5">Assunto</label>
-                      <input
-                        type="text"
-                        className="input-glass"
-                        placeholder="Assunto do e-mail"
-                        value={form.subject}
-                        onChange={(e) => setForm({ ...form, subject: e.target.value })}
-                      />
-                      {errors.subject && (
-                        <p className="text-red-400 text-xs mt-1">{errors.subject}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm text-gray-400 mb-1.5">
-                        Corpo <span className="text-gray-600">(opcional)</span>
-                      </label>
-                      <textarea
-                        className="input-glass min-h-[80px] resize-y"
-                        placeholder="Conteúdo do e-mail"
-                        value={form.body}
-                        onChange={(e) => setForm({ ...form, body: e.target.value })}
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div>
-                      <label className="block text-sm text-gray-400 mb-1.5">
-                        Nome do Relatório
-                      </label>
-                      <input
-                        type="text"
-                        className="input-glass"
-                        placeholder="Vendas mensais"
-                        value={form.reportName}
-                        onChange={(e) =>
-                          setForm({ ...form, reportName: e.target.value })
-                        }
-                      />
-                      {errors.reportName && (
-                        <p className="text-red-400 text-xs mt-1">{errors.reportName}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="block text-sm text-gray-400 mb-1.5">Formato</label>
-                      <select
-                        className="input-glass"
-                        value={form.format}
-                        onChange={(e) => setForm({ ...form, format: e.target.value })}
+                <h2 className="text-xl font-bold gradient-text mb-1">Novo job</h2>
+                <p className="text-xs text-gray-500 mb-6">Preencha os dados abaixo para criar um novo job.</p>
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div>
+                    <label className="block text-sm text-gray-400 mb-1.5">Tipo</label>
+                    <select
+                      className="input-glass"
+                      style={{ fontSize: '16px' }}
+                      value={form.type}
+                      onChange={(e) =>
+                        setForm({ ...form, type: e.target.value as JobType })
+                      }
+                    >
+                      <option value="EnviarEmail">Enviar E-mail</option>
+                      <option value="GerarRelatorio">Gerar Relatório</option>
+                    </select>
+                  </div>
+
+                  {form.type === 'EnviarEmail' ? (
+                    <>
+                      <div>
+                        <label className="block text-sm text-gray-400 mb-1.5">Para</label>
+                        <input
+                          type="email"
+                          className="input-glass py-3"
+                          style={{ fontSize: '16px' }}
+                          placeholder="usuario@email.com"
+                          value={form.to}
+                          onChange={(e) => setForm({ ...form, to: e.target.value })}
+                        />
+                        {errors.to && (
+                          <p className="text-red-400 text-xs mt-1">{errors.to}</p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block text-sm text-gray-400 mb-1.5">Assunto</label>
+                        <input
+                          type="text"
+                          className="input-glass py-3"
+                          style={{ fontSize: '16px' }}
+                          placeholder="Assunto do e-mail"
+                          value={form.subject}
+                          onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                        />
+                        {errors.subject && (
+                          <p className="text-red-400 text-xs mt-1">{errors.subject}</p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block text-sm text-gray-400 mb-1.5">
+                          Corpo <span className="text-gray-600">(opcional)</span>
+                        </label>
+                        <textarea
+                          className="input-glass min-h-[80px] resize-y py-3"
+                          style={{ fontSize: '16px' }}
+                          placeholder="Conteúdo do e-mail"
+                          value={form.body}
+                          onChange={(e) => setForm({ ...form, body: e.target.value })}
+                        />
+                      </div>
+                    </>
+                  ) : (
+                    <>
+                      <div>
+                        <label className="block text-sm text-gray-400 mb-1.5">
+                          Nome do Relatório
+                        </label>
+                        <input
+                          type="text"
+                          className="input-glass py-3"
+                          style={{ fontSize: '16px' }}
+                          placeholder="Vendas mensais"
+                          value={form.reportName}
+                          onChange={(e) =>
+                            setForm({ ...form, reportName: e.target.value })
+                          }
+                        />
+                        {errors.reportName && (
+                          <p className="text-red-400 text-xs mt-1">{errors.reportName}</p>
+                        )}
+                      </div>
+                      <div>
+                        <label className="block text-sm text-gray-400 mb-1.5">Formato</label>
+                        <select
+                          className="input-glass"
+                          style={{ fontSize: '16px' }}
+                          value={form.format}
+                          onChange={(e) => setForm({ ...form, format: e.target.value })}
+                        >
+                          <option value="pdf">PDF</option>
+                          <option value="excel">Excel</option>
+                          <option value="csv">CSV</option>
+                        </select>
+                      </div>
+                    </>
+                  )}
+
+                  <AnimatePresence>
+                    {feedback === 'success' && (
+                      <motion.p
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="text-green-400 text-sm text-center py-2"
                       >
-                        <option value="pdf">PDF</option>
-                        <option value="excel">Excel</option>
-                        <option value="csv">CSV</option>
-                      </select>
-                    </div>
-                  </>
-                )}
+                        Job criado com sucesso!
+                      </motion.p>
+                    )}
+                    {feedback === 'error' && (
+                      <motion.p
+                        initial={{ opacity: 0, y: -8 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        className="text-red-400 text-sm text-center py-2"
+                      >
+                        Erro ao criar job. Verifique a API.
+                      </motion.p>
+                    )}
+                  </AnimatePresence>
 
-                <AnimatePresence>
-                  {feedback === 'success' && (
-                    <motion.p
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0 }}
-                      className="text-green-400 text-sm text-center py-2"
+                  <div className="flex gap-3 pt-2 pb-1">
+                    <button
+                      type="button"
+                      onClick={onClose}
+                      className="flex-1 px-4 py-3 rounded-xl border border-white/10 text-gray-400 hover:bg-white/5 transition-colors text-sm"
                     >
-                      Job criado com sucesso!
-                    </motion.p>
-                  )}
-                  {feedback === 'error' && (
-                    <motion.p
-                      initial={{ opacity: 0, y: -8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0 }}
-                      className="text-red-400 text-sm text-center py-2"
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={createJob.isPending}
+                      className="flex-1 btn-neon disabled:opacity-50 py-3"
                     >
-                      Erro ao criar job. Verifique a API.
-                    </motion.p>
-                  )}
-                </AnimatePresence>
-
-                <div className="flex gap-3 pt-2">
-                  <button
-                    type="button"
-                    onClick={onClose}
-                    className="flex-1 px-4 py-2.5 rounded-xl border border-white/10 text-gray-400 hover:bg-white/5 transition-colors"
-                  >
-                    Cancelar
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={createJob.isPending}
-                    className="flex-1 btn-neon disabled:opacity-50"
-                  >
-                    {createJob.isPending ? 'Criando…' : 'Criar job'}
-                  </button>
-                </div>
-              </form>
+                      {createJob.isPending ? 'Criando…' : 'Criar job'}
+                    </button>
+                  </div>
+                </form>
+              </div>
             </div>
           </motion.div>
         </>

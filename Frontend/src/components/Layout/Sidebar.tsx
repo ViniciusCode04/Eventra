@@ -8,18 +8,40 @@ const navItems = [
   { to: '/jobs', label: 'Jobs', icon: '▣' },
 ];
 
-export function Sidebar() {
+interface SidebarProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+export function Sidebar({ open, onClose }: SidebarProps) {
   return (
-    <aside className="fixed left-0 top-0 z-40 h-screen w-64 flex flex-col border-r border-eventra-cyan/10 bg-eventra-dark/80 backdrop-blur-2xl">
+    <aside
+      className={`
+        fixed left-0 top-0 z-40 h-screen w-72 md:w-64 flex flex-col
+        border-r border-eventra-cyan/10 bg-eventra-dark/80 backdrop-blur-2xl
+        transition-transform duration-300 ease-in-out
+        ${open ? 'translate-x-0' : '-translate-x-full'}
+        md:translate-x-0
+      `}
+    >
       {/* Glow edge */}
       <div className="absolute right-0 top-0 bottom-0 w-px bg-gradient-to-b from-eventra-cyan via-eventra-purple to-eventra-cyan animate-pulse opacity-50" />
 
-      {/* Scanline sidebar */}
+      {/* Scanline */}
       <motion.div
         className="absolute inset-0 bg-gradient-to-b from-eventra-cyan/[0.02] to-transparent pointer-events-none"
         animate={{ opacity: [0.3, 0.6, 0.3] }}
         transition={{ duration: 4, repeat: Infinity }}
       />
+
+      {/* Botão fechar — apenas mobile */}
+      <button
+        onClick={onClose}
+        className="md:hidden absolute top-4 right-4 z-50 w-8 h-8 flex items-center justify-center rounded-lg border border-white/10 text-gray-400 hover:text-white hover:border-eventra-cyan/50 transition-colors text-lg"
+        aria-label="Fechar menu"
+      >
+        ✕
+      </button>
 
       <div className="p-6 border-b border-white/[0.06] relative">
         <motion.div
@@ -73,6 +95,7 @@ export function Sidebar() {
             <NavLink
               to={item.to}
               end={item.to === '/'}
+              onClick={onClose}
               className={({ isActive }) =>
                 `group flex items-center gap-3 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-300 relative overflow-hidden ${
                   isActive

@@ -1,6 +1,10 @@
 import { motion } from 'framer-motion';
 
-export function SystemBar() {
+interface SystemBarProps {
+  onMenuOpen?: () => void;
+}
+
+export function SystemBar({ onMenuOpen }: SystemBarProps) {
   const time = new Date().toLocaleTimeString('pt-BR');
 
   return (
@@ -11,7 +15,18 @@ export function SystemBar() {
     >
       <div className="absolute inset-0 bg-gradient-to-r from-eventra-cyan/5 via-transparent to-eventra-purple/5 pointer-events-none" />
 
-      <div className="flex items-center gap-4 relative z-10">
+      <div className="flex items-center gap-3 relative z-10">
+        {/* Hambúrguer no SystemBar — mobile */}
+        {onMenuOpen && (
+          <button
+            onClick={onMenuOpen}
+            className="md:hidden flex items-center justify-center w-7 h-7 rounded-md border border-white/10 text-gray-400 hover:text-eventra-cyan hover:border-eventra-cyan/40 transition-colors text-base shrink-0"
+            aria-label="Abrir menu"
+          >
+            ☰
+          </button>
+        )}
+
         <span className="text-eventra-cyan flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 bg-eventra-cyan rounded-full animate-pulse shadow-[0_0_8px_#00D4FF]" />
           Sistema online
@@ -24,7 +39,7 @@ export function SystemBar() {
         <motion.span
           animate={{ opacity: [1, 0.5, 1] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="text-green-400/80"
+          className="text-green-400/80 hidden sm:inline"
         >
           Gravando
         </motion.span>

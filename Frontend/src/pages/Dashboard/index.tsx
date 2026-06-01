@@ -52,7 +52,8 @@ export default function DashboardPage() {
         </motion.div>
       )}
 
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+      {/* StatCards: 2 colunas em mobile, 3 em sm, 5 em lg */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-8">
         <StatCard label="Total" value={stats.total} color="#FFFFFF" glow="0 0 25px rgba(255,255,255,0.1)" index={0} icon="◈" />
         <StatCard label="Pendentes" value={stats.pendente} color="#EAB308" glow="0 0 25px rgba(234,179,8,0.3)" index={1} icon="◷" />
         <StatCard label="Processando" value={stats.emProcessamento} color="#00D4FF" glow="0 0 30px rgba(0,212,255,0.35)" index={2} icon="⟳" />
@@ -60,9 +61,10 @@ export default function DashboardPage() {
         <StatCard label="Erros" value={stats.erro} color="#EF4444" glow="0 0 25px rgba(239,68,68,0.3)" index={4} icon="✕" />
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6 mb-8">
+      {/* Gráfico + Atividade recente: 1 coluna em mobile, 2 em lg */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         <GlassPanel title="Análise" subtitle="Distribuição por status" delay={0.3}>
-          <ResponsiveContainer width="100%" height={300}>
+          <ResponsiveContainer width="100%" height={280}>
             <BarChart data={chartData} margin={{ top: 16, right: 8, left: -20, bottom: 0 }}>
               <defs>
                 {chartData.map((entry, i) => (

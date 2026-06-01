@@ -42,7 +42,10 @@ export default function JobsPage() {
         title="Jobs"
         subtitle={`${filteredJobs.length} registro(s) no sistema`}
         action={
-          <button className="btn-neon" onClick={() => setModalOpen(true)}>
+          <button
+            className="btn-neon w-full sm:w-auto"
+            onClick={() => setModalOpen(true)}
+          >
             + Novo job
           </button>
         }
@@ -58,15 +61,16 @@ export default function JobsPage() {
         </motion.div>
       )}
 
+      {/* Filtros: coluna em mobile, linha em sm+ */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-wrap gap-4 mb-6 p-4 rounded-xl border border-white/[0.06] bg-eventra-dark/30 backdrop-blur-sm"
+        className="flex flex-col sm:flex-row sm:flex-wrap gap-3 mb-6 p-4 rounded-xl border border-white/[0.06] bg-eventra-dark/30 backdrop-blur-sm"
       >
-        <div className="flex items-center gap-2">
-          <span className="text-[10px] text-gray-600 uppercase tracking-wide">Filtro</span>
+        <div className="flex items-center gap-2 flex-1 sm:flex-none">
+          <span className="text-[10px] text-gray-600 uppercase tracking-wide shrink-0">Status</span>
           <select
-            className="input-glass w-auto min-w-[180px] text-sm"
+            className="input-glass flex-1 sm:w-auto sm:min-w-[180px] text-sm"
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
           >
@@ -78,27 +82,28 @@ export default function JobsPage() {
           </select>
         </div>
 
-        <select
-          className="input-glass w-auto min-w-[180px] text-sm"
-          value={typeFilter}
-          onChange={(e) => setTypeFilter(e.target.value)}
-        >
-          {typeOptions.map((o) => (
-            <option key={o.value} value={o.value} className="bg-eventra-dark">
-              {o.label}
-            </option>
-          ))}
-        </select>
+        <div className="flex items-center gap-2 flex-1 sm:flex-none">
+          <span className="text-[10px] text-gray-600 uppercase tracking-wide shrink-0">Tipo</span>
+          <select
+            className="input-glass flex-1 sm:w-auto sm:min-w-[180px] text-sm"
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value)}
+          >
+            {typeOptions.map((o) => (
+              <option key={o.value} value={o.value} className="bg-eventra-dark">
+                {o.label}
+              </option>
+            ))}
+          </select>
+        </div>
 
-        <div className="ml-auto">
+        <div className="sm:ml-auto">
           <LiveIndicator label="Atualização a cada 3 s" />
         </div>
       </motion.div>
 
       {isLoading ? (
-        <div
-          className="tech-panel p-12 text-center text-gray-500 animate-pulse"
-        >
+        <div className="tech-panel p-12 text-center text-gray-500 animate-pulse">
           Carregando jobs...
         </div>
       ) : (
