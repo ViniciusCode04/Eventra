@@ -1,32 +1,53 @@
-import { motion } from 'framer-motion';
+import { useEffect, useRef, memo } from 'react';
 
-const columns = 40;
+// Pure CSS animation instead of 40 Framer Motion instances
+export const MatrixRain = memo(function MatrixRain() {
+  const containerRef = useRef<HTMLDivElement>(null);
 
-export function MatrixRain() {
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) return;
+
+    const columns = 30; // reduced from 40
+    const chars: HTMLDivElement[] = [];
+
+    for (let i = 0; i < columns; i++) {
+      const col = document.createElement('div');
+      col.className = 'matrix-col';
+      col.style.cssText = `
+        position: absolute;
+        top: 0;
+        left: ${(i / columns) * 100}%;
+        font-family: monospace;
+        font-size: 10px;
+        color: #00D4FF;
+        line-height: 1;
+        white-space: pre;
+        text-shadow: 0 0 8px rgba(0,212,255,0.8);
+        will-change: transform;
+        animation: matrixFall ${8 + (i % 5) * 2}s linear ${i * 0.15}s infinite;
+      `;
+      // Static content — no Math.random() on every render
+      col.textContent = Array.from({ length: 30 }, (_, j) => (i + j) % 2 === 0 ? '1' : '0').join('\n');
+      container.appendChild(col);
+      chars.push(col);
+    }
+
+    return () => chars.forEach(c => c.remove());
+  }, []);
+
   return (
-    <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-[0.07]">
-      {Array.from({ length: columns }).map((_, i) => (
-        <motion.div
-          key={i}
-          className="absolute top-0 font-mono text-[10px] text-eventra-cyan leading-none whitespace-pre select-none"
-          style={{
-            left: `${(i / columns) * 100}%`,
-            textShadow: '0 0 8px rgba(0,212,255,0.8)',
-          }}
-          initial={{ y: '-100%' }}
-          animate={{ y: '100vh' }}
-          transition={{
-            duration: 8 + (i % 5) * 2,
-            repeat: Infinity,
-            ease: 'linear',
-            delay: i * 0.15,
-          }}
-        >
-          {Array.from({ length: 30 })
-            .map(() => (Math.random() > 0.5 ? '1' : '0'))
-            .join('\n')}
-        </motion.div>
-      ))}
-    </div>
+    <>
+      <style>{`
+        @keyframes matrixFall {
+          from { transform: translateY(-100%); }
+          to   { transform: translateY(100vh); }
+        }
+      `}</style>
+      <div
+        ref={containerRef}
+        className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-[0.07]"
+      />
+    </>
   );
-}
+});
