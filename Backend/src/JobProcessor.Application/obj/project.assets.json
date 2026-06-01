@@ -169,17 +169,17 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Administrator\\AppData\\Local\\Temp\\cursor-sandbox-cache\\18c25f7411154d68a56ca54cf9de7774\\nuget": {},
+    "C:\\Users\\Administrator\\.nuget\\packages\\": {},
     "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Application\\JobProcessor.Application.csproj",
+      "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Application\\JobProcessor.Application.csproj",
       "projectName": "JobProcessor.Application",
-      "projectPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Application\\JobProcessor.Application.csproj",
-      "packagesPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\cursor-sandbox-cache\\18c25f7411154d68a56ca54cf9de7774\\nuget",
-      "outputPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Application\\obj\\",
+      "projectPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Application\\JobProcessor.Application.csproj",
+      "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -201,8 +201,8 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "projectReferences": {
-            "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj": {
-              "projectPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj"
+            "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj": {
+              "projectPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj"
             }
           }
         }

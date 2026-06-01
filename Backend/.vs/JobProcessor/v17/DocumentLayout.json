@@ -1,17 +1,17 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\",
+  "WorkspaceRootPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{F6F98ED1-DAEC-44F3-91C5-E2AE68F76637}|src\\JobProcessor.API\\JobProcessor.API.csproj|c:\\users\\administrator\\desktop\\f360\\jobprocessor\\src\\jobprocessor.api\\controllers\\jobscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{F6F98ED1-DAEC-44F3-91C5-E2AE68F76637}|src\\JobProcessor.API\\JobProcessor.API.csproj|c:\\users\\administrator\\desktop\\eventra\\backend\\src\\jobprocessor.api\\controllers\\jobscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F6F98ED1-DAEC-44F3-91C5-E2AE68F76637}|src\\JobProcessor.API\\JobProcessor.API.csproj|solutionrelative:src\\jobprocessor.api\\controllers\\jobscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{F6F98ED1-DAEC-44F3-91C5-E2AE68F76637}|src\\JobProcessor.API\\JobProcessor.API.csproj|c:\\users\\administrator\\desktop\\f360\\jobprocessor\\src\\jobprocessor.api\\dtos\\createjobrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{F6F98ED1-DAEC-44F3-91C5-E2AE68F76637}|src\\JobProcessor.API\\JobProcessor.API.csproj|c:\\users\\administrator\\desktop\\eventra\\backend\\src\\jobprocessor.api\\dtos\\createjobrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{F6F98ED1-DAEC-44F3-91C5-E2AE68F76637}|src\\JobProcessor.API\\JobProcessor.API.csproj|solutionrelative:src\\jobprocessor.api\\dtos\\createjobrequest.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{C297A91D-AD82-4309-9125-1435E629BE75}|src\\JobProcessor.Application\\JobProcessor.Application.csproj|c:\\users\\administrator\\desktop\\f360\\jobprocessor\\src\\jobprocessor.application\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{C297A91D-AD82-4309-9125-1435E629BE75}|src\\JobProcessor.Application\\JobProcessor.Application.csproj|c:\\users\\administrator\\desktop\\eventra\\backend\\src\\jobprocessor.application\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{C297A91D-AD82-4309-9125-1435E629BE75}|src\\JobProcessor.Application\\JobProcessor.Application.csproj|solutionrelative:src\\jobprocessor.application\\dependencyinjection.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
@@ -28,24 +28,23 @@
               "$type": "Document",
               "DocumentIndex": 1,
               "Title": "CreateJobRequest.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.API\\DTOs\\CreateJobRequest.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.API\\DTOs\\CreateJobRequest.cs",
               "RelativeDocumentMoniker": "src\\JobProcessor.API\\DTOs\\CreateJobRequest.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.API\\DTOs\\CreateJobRequest.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.API\\DTOs\\CreateJobRequest.cs",
               "RelativeToolTip": "src\\JobProcessor.API\\DTOs\\CreateJobRequest.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAACAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-31T00:24:53.932Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-31T00:24:53.932Z"
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
               "Title": "JobsController.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.API\\Controllers\\JobsController.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.API\\Controllers\\JobsController.cs",
               "RelativeDocumentMoniker": "src\\JobProcessor.API\\Controllers\\JobsController.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.API\\Controllers\\JobsController.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.API\\Controllers\\JobsController.cs",
               "RelativeToolTip": "src\\JobProcessor.API\\Controllers\\JobsController.cs",
-              "ViewState": "AgIAANAAAAAAAAAAAAAiwNUAAAAAAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAF8AAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2026-05-31T00:24:16.686Z",
               "EditorCaption": ""
@@ -54,14 +53,13 @@
               "$type": "Document",
               "DocumentIndex": 2,
               "Title": "DependencyInjection.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Application\\DependencyInjection.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Application\\DependencyInjection.cs",
               "RelativeDocumentMoniker": "src\\JobProcessor.Application\\DependencyInjection.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Application\\DependencyInjection.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Application\\DependencyInjection.cs",
               "RelativeToolTip": "src\\JobProcessor.Application\\DependencyInjection.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAA0AAAAnAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-05-31T00:13:40.949Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-05-31T00:13:40.949Z"
             },
             {
               "$type": "Bookmark",

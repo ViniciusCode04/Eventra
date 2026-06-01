@@ -1,61 +1,85 @@
-# JobProcessor
+# Eventra — JobProcessor
 
-Serviço de processamento de tarefas (jobs) em C# com ASP.NET Core, RabbitMQ e MongoDB.
+Serviço de processamento de tarefas em background construído com **C# / ASP.NET Core 8**, **RabbitMQ** e **MongoDB**, desenvolvido como resposta ao desafio técnico de Desenvolvedor Jr C# / ASP.NET da FO360.
 
-## Pré-requisitos
+---
 
-- [Docker](https://www.docker.com/) instalado
-- [Docker Compose](https://docs.docker.com/compose/) instalado
+## Sumário
+
+- [Deploy em produção](#deploy-em-produção)
+- [Como rodar](#como-rodar)
+- [Endpoints da API](#endpoints-da-api)
+- [Arquitetura](#arquitetura)
+- [Como o projeto atende ao desafio](#como-o-projeto-atende-ao-desafio)
+- [Decisões técnicas](#decisões-técnicas)
+- [Configuração SMTP / e-mail](#configuração-smtp--e-mail)
+- [Testes](#testes)
+- [Estrutura do projeto](#estrutura-do-projeto)
+
+---
+
+## Deploy em produção
+
+O projeto está rodando em produção com cada serviço no provedor mais adequado:
+
+| Serviço | Provedor |
+|---------|----------|
+| Frontend (React + nginx) | Render |
+| API (ASP.NET Core) | Render |
+| Worker (background) | Railway |
+| MongoDB | MongoDB Atlas |
+| RabbitMQ | CloudAMQP |
+
+---
 
 ## Como rodar
 
-Na raiz do projeto (`JobProcessor/`):
+**Pré-requisitos:** [Docker](https://www.docker.com/) e [Docker Compose](https://docs.docker.com/compose/).
+
+> **Nenhuma configuração necessária.** Todas as dependências (MongoDB, RabbitMQ) sobem via Docker com credenciais padrão. O envio de e-mail roda em modo mock sem precisar de SMTP — o projeto funciona completo com apenas os dois comandos abaixo.
+
+Na pasta `Backend/`:
 
 ```bash
+cd Backend
 docker-compose up --build
 ```
 
-Para subir com **4 workers** (recomendado para throughput e testes de carga):
-
-```bash
-docker-compose up --build
-```
-
-Os serviços `worker`, `worker-2`, `worker-3` e `worker-4` sobem automaticamente.
+Isso sobe **todos os serviços automaticamente**: MongoDB, RabbitMQ, a API, 4 workers e o frontend Eventra.
 
 | Serviço | URL |
 |---------|-----|
-| **Eventra (frontend)** | http://localhost:5173 |
-| API | http://localhost:5000 |
-| Swagger (direto na API) | http://localhost:5000/swagger |
+| Frontend Eventra (React + nginx) | http://localhost:5173 |
+| API REST | http://localhost:5000 |
+| Swagger UI | http://localhost:5000/swagger |
 | Swagger (via Eventra/nginx) | http://localhost:5173/swagger |
-| **Stress test (paralelo)** | http://localhost:5173/stress-test.html |
-| RabbitMQ UI | http://localhost:15672 (guest/guest) |
+| Stress test interativo | http://localhost:5173/stress-test.html |
+| RabbitMQ Management UI | http://localhost:15672 (guest/guest) |
 
-O frontend **Eventra** sobe no serviço `eventra` (nginx + React). Requisições `/api` são proxyadas para a API internamente.
+> O frontend Eventra faz proxy de `/api` para a API internamente via nginx — não é necessário configurar CORS manualmente.
 
-## Endpoints disponíveis
+### Escalar workers manualmente
+
+```bash
+docker-compose up --build --scale worker=8
+```
+
+Por padrão já sobem 4 instâncias (`worker`, `worker-2`, `worker-3`, `worker-4`) definidas no `docker-compose.yml`.
+
+---
+
+## Endpoints da API
 
 | Método | Rota | Descrição |
 |--------|------|-----------|
-| POST | `/api/jobs` | Cria um novo job |
-| GET | `/api/jobs/{id}` | Retorna status de um job |
-| GET | `/api/jobs` | Lista todos os jobs |
+| `POST` | `/api/jobs` | Cria um novo job e publica na fila |
+| `GET` | `/api/jobs/{id}` | Consulta o status de um job pelo ID |
+| `GET` | `/api/jobs` | Lista todos os jobs |
+| `GET` | `/api/jobs/{id}/report` | Faz download do relatório gerado (quando aplicável) |
 
-Swagger UI: `http://localhost:5000/swagger` ou `http://localhost:5173/swagger`
+### Exemplos de uso
 
-## Testes de stress
-
-A API aceita **até 1000 conexões simultâneas** (Kestrel configurado via Docker). Use:
-
-1. **Swagger** — abra `http://localhost:5000/swagger` ou `http://localhost:5173/swagger`, clique em *Try it out* e dispare várias vezes `POST /api/jobs` (cada aba/janela do navegador conta como cliente separado).
-2. **Stress test em paralelo** — `http://localhost:5173/stress-test.html` dispara dezenas ou centenas de requisições com concorrência configurável (ideal para carga na API e fila RabbitMQ).
-
-Para stress com relatórios (processamento rápido), prefira jobs `GerarRelatorio`. Jobs de e-mail dependem do SMTP e são mais lentos.
-
-## Exemplo de request
-
-**Enviar email** (mock por padrão; SMTP real quando configurado — veja [Configuração SMTP](#configuração-smtp)):
+**Enviar e-mail** (mock por padrão; real quando SMTP/SendGrid configurado):
 
 ```bash
 curl -X POST http://localhost:5000/api/jobs \
@@ -63,7 +87,7 @@ curl -X POST http://localhost:5000/api/jobs \
   -d '{"type": "EnviarEmail", "payload": {"to": "user@email.com", "subject": "Teste"}}'
 ```
 
-**Gerar relatório (mock):**
+**Gerar relatório** (gera PDF, CSV ou Excel e disponibiliza para download):
 
 ```bash
 curl -X POST http://localhost:5000/api/jobs \
@@ -71,105 +95,193 @@ curl -X POST http://localhost:5000/api/jobs \
   -d '{"type": "GerarRelatorio", "payload": {"reportName": "VendasMensais", "format": "pdf"}}'
 ```
 
-Consultar status:
+**Consultar status:**
 
 ```bash
 curl http://localhost:5000/api/jobs/{job-id}
 ```
 
-## RabbitMQ Management UI
-
-- URL: http://localhost:15672
-- Usuário: `guest`
-- Senha: `guest`
+---
 
 ## Arquitetura
 
 ```
-POST /api/jobs → JobService → MongoDB (Pendente) + RabbitMQ (jobId)
-RabbitMQ → Worker (RabbitMQConsumer) → JobExecutor → Handler (EnviarEmail / GerarRelatorio) → Concluido/Erro
-GET /api/jobs/{id} → consulta status no MongoDB
+Cliente HTTP
+     │
+     ▼
+POST /api/jobs
+     │
+     ├─► MongoDB  ──── persiste job com status "Pendente"
+     │
+     └─► RabbitMQ ──── publica jobId na fila "job-queue"
+                              │
+                    ┌─────────┴─────────┐
+                    ▼                   ▼
+              Worker 1 ... N (RabbitMQConsumer — BackgroundService)
+                    │
+                    ├─► TryAcquireAsync (MongoDB, atômico)
+                    │        └─ "Pendente" → "EmProcessamento"
+                    │
+                    ├─► JobExecutor → IJobHandler (por tipo)
+                    │        ├─ SendEmailJobHandler
+                    │        └─ GenerateReportJobHandler
+                    │
+                    └─► MongoDB ──── atualiza status "Concluido" ou "Erro"
+                                          (com retry automático se falhar)
+
+GET /api/jobs/{id} → MongoDB → retorna status atual
 ```
+
+---
+
+## Como o projeto atende ao desafio
+
+### 1. Recebimento de tarefas
+
+> *"A aplicação deverá expor uma API que recebe a criação de novas tarefas para processamento em background."*
+
+`POST /api/jobs` recebe `type` e `payload` (JSON livre), persiste o job no MongoDB via `JobService.CreateJobAsync` e publica o `jobId` na fila RabbitMQ. A entidade `Job` contém:
+
+| Campo | Tipo | Descrição |
+|-------|------|-----------|
+| `Id` | `Guid` | Identificador único gerado automaticamente |
+| `Type` | `string` | Tipo do job (`"EnviarEmail"`, `"GerarRelatorio"`) |
+| `Payload` | `string` (JSON) | Dados necessários para o processamento |
+| `Status` | `JobStatus` (enum) | Estado atual do job |
+| `RetryCount` / `MaxRetries` | `int` | Controle de tentativas |
+| `CreatedAt` / `UpdatedAt` | `DateTime` | Timestamps de auditoria |
+
+### 2. Processamento em segundo plano
+
+> *"As tarefas devem ser processadas por um ou mais workers em background."*
+> *"Deve haver um sistema de re-tentativa com limite máximo de tentativas."*
+> *"Deve existir controle de concorrência para múltiplos workers sem conflitos."*
+
+`RabbitMQConsumer` herda de `BackgroundService` (hosted service nativo do ASP.NET Core) e escuta a fila continuamente. Múltiplas instâncias podem ser levantadas em paralelo.
+
+**Controle de concorrência — `TryAcquireAsync`:**  
+Usa `FindOneAndUpdate` atômico do MongoDB: só altera o status de `Pendente` → `EmProcessamento` se o job ainda estiver pendente. Se outro worker já adquiriu o job, a operação retorna `null` e o consumidor descarta a mensagem com `BasicAck` sem reprocessar — sem locks manuais, sem condições de corrida.
+
+**Sistema de retry:**  
+Em falha, o worker incrementa `RetryCount`. Enquanto `RetryCount < MaxRetries` (padrão: 3), o job volta para `Pendente` e é republicado na fila com delay de 1 segundo. Após esgotar as tentativas, o status muda para `Erro` com a mensagem registrada. Mensagens são sempre confirmadas com `BasicAck` para evitar loops infinitos no RabbitMQ.
+
+### 3. Status das tarefas
+
+> *"Manter o status de cada tarefa atualizado. Deve ser possível consultar o status via API."*
+
+O enum `JobStatus` define os quatro estados:
+
+```csharp
+public enum JobStatus { Pendente, EmProcessamento, Concluido, Erro }
+```
+
+`GET /api/jobs/{id}` consulta o MongoDB e retorna o estado atual, incluindo `errorMessage` quando aplicável.
+
+### 4. Escalabilidade
+
+> *"A aplicação deve ser preparada para suportar grande volume de tarefas, utilizando filas."*
+
+RabbitMQ é o broker de mensagens — fila `job-queue` configurada como `durable: true` e mensagens `Persistent`, garantindo sobrevivência a reinicializações. O `BasicQos(prefetchCount: 1)` distribui mensagens entre workers de forma equilibrada. A API é separada dos workers, permitindo escalar cada camada de forma independente:
+
+```bash
+# Subir com mais workers em tempo de execução:
+docker-compose up --scale worker=10
+```
+
+A API suporta até 1000 conexões simultâneas (Kestrel configurado no `docker-compose.yml`).
+
+### 5. Deployment
+
+> *"Disponibilizar um Dockerfile para containerizar o serviço."*
+
+O projeto possui dois Dockerfiles separados:
+
+- `Dockerfile.api` — imagem da Web API
+- `Dockerfile.worker` — imagem dos workers de background
+
+O `docker-compose.yml` orquestra todos os serviços (MongoDB, RabbitMQ, API, 4 workers, frontend) com healthchecks e dependências configuradas, garantindo que os serviços só iniciem quando suas dependências estiverem prontas.
+
+---
 
 ## Decisões técnicas
 
-### Controle de concorrência com `FindOneAndUpdate`
+### Arquitetura em camadas (Clean Architecture)
 
-O método `TryAcquireAsync` usa um update atômico no MongoDB: só altera o status de `Pendente` para `EmProcessamento` se o job ainda estiver pendente. Se outro worker já tiver adquirido o job, a operação retorna `null` e o consumidor faz `BasicAck` sem reprocessar. Isso evita locks manuais e condições de corrida quando múltiplos workers consomem a mesma fila.
+O projeto é dividido em 4 projetos C# seguindo separação de responsabilidades:
 
-### Sistema de retry
+| Projeto | Responsabilidade |
+|---------|-----------------|
+| `JobProcessor.Domain` | Entidades (`Job`) e enums (`JobStatus`) — sem dependências externas |
+| `JobProcessor.Application` | Casos de uso (`JobService`), handlers, `JobExecutor`, interfaces |
+| `JobProcessor.Infrastructure` | MongoDB, RabbitMQ, SMTP/SendGrid — implementações concretas |
+| `JobProcessor.API` | Controllers, DTOs, configuração do host |
 
-Em falha de processamento, o worker incrementa `RetryCount`. Enquanto `RetryCount < MaxRetries`, o job volta para `Pendente` e é republicado na fila (com delay de 1 segundo). Após esgotar as tentativas, o status passa para `Erro` com a mensagem registrada. Mensagens são sempre confirmadas com `BasicAck` para evitar loops infinitos de requeue no RabbitMQ.
+### Roteamento de handlers por tipo
 
-### Handlers mockados por tipo de job
+`JobExecutor` resolve o handler correto em tempo de execução via `IEnumerable<IJobHandler>`, sem switch/case:
 
-| Tipo | Handler | Payload esperado |
-|------|---------|------------------|
-| `EnviarEmail` | `SendEmailJobHandler` | `{ "to", "subject", "body?" }` |
-| `GerarRelatorio` | `GenerateReportJobHandler` | `{ "reportName", "format?" }` — gera PDF, CSV ou Excel e permite download em `GET /api/jobs/{id}/report` |
+```csharp
+var handler = _handlers.FirstOrDefault(h =>
+    string.Equals(h.JobType, job.Type, StringComparison.OrdinalIgnoreCase));
+```
 
-Os handlers validam o payload e lançam exceção em caso de erro — acionando o sistema de retry do worker. O handler de e-mail usa `IEmailSender`: com SMTP desabilitado, apenas registra log `[MOCK]`; com SMTP habilitado, envia e-mail real via MailKit.
+Adicionar um novo tipo de job exige apenas criar uma classe que implemente `IJobHandler` e registrá-la no DI — sem alterar código existente (Open/Closed Principle).
 
-## Configuração SMTP
+### Banco de dados NoSQL — MongoDB
 
-Por padrão, o envio de e-mail é **simulado** (`Smtp:Enabled=false`). Para enviar e-mails reais, configure a seção `Smtp` no `appsettings.json` ou via variáveis de ambiente.
+MongoDB armazena os jobs com `GuidSerializer` configurado para o formato `Standard` (UUID). O índice atômico via `FindOneAndUpdate` elimina a necessidade de locks distribuídos externos.
 
-### Provedores gratuitos
+---
 
-| Provedor | Limite gratuito | Host | Porta |
-|----------|-----------------|------|-------|
-| **Brevo** (Sendinblue) | 300 e-mails/dia | `smtp-relay.brevo.com` | 587 |
-| **Gmail** | ~500 e-mails/dia | `smtp.gmail.com` | 587 |
+## Configuração SMTP / e-mail
 
-**Brevo:** crie uma conta em [brevo.com](https://www.brevo.com/), vá em *SMTP & API* e gere uma chave SMTP. Use o e-mail da conta como `User` e a chave como `Password`.
+Por padrão, o envio de e-mail é **simulado** (`Smtp:Enabled=false` / `SendGrid:ApiKey` ausente). Para enviar e-mails reais, há dois caminhos:
 
-**Gmail:** ative a verificação em duas etapas na conta Google e crie uma [Senha de app](https://myaccount.google.com/apppasswords). Use seu e-mail Gmail como `User` e a senha de app como `Password`. O remetente (`FromEmail`) deve ser o mesmo e-mail Gmail.
+### Opção 1 — SendGrid (recomendado)
 
-### Variáveis de ambiente (Docker Compose)
+Defina no `env` ou `docker-compose.yml` do worker:
 
-No serviço `worker` do `docker-compose.yml`, descomente e preencha:
+```env
+SENDGRID_API_KEY=sua-chave-sendgrid
+SENDGRID_FROM_EMAIL=remetente@seudominio.com
+```
+
+### Opção 2 — SMTP (Gmail, Brevo, etc.)
+
+| Provedor | Host | Porta |
+|----------|------|-------|
+| **Brevo** | `smtp-relay.brevo.com` | 587 |
+| **Gmail** | `smtp.gmail.com` | 587 |
 
 ```yaml
-environment:
-  - Smtp__Enabled=true
-  - Smtp__Host=smtp-relay.brevo.com
-  - Smtp__Port=587
-  - Smtp__User=seu-usuario-smtp@exemplo.com
-  - Smtp__Password=sua-chave-smtp
-  - Smtp__FromEmail=remetente@seudominio.com
-  - Smtp__FromName=JobProcessor
-  - Smtp__UseSsl=true
+# No docker-compose.yml, seção environment do worker:
+- Smtp__Enabled=true
+- Smtp__Host=smtp-relay.brevo.com
+- Smtp__Port=587
+- Smtp__User=seu-usuario@exemplo.com
+- Smtp__Password=sua-chave-smtp
+- Smtp__FromEmail=remetente@seudominio.com
+- Smtp__FromName=Eventra
+- Smtp__UseSsl=true
 ```
 
-> **Segurança:** nunca commite senhas reais no repositório. Use variáveis de ambiente ou [User Secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets) no desenvolvimento local.
+> **Segurança:** nunca commite senhas reais. Use o arquivo `env` (já no `.gitignore`) ou [User Secrets](https://learn.microsoft.com/aspnet/core/security/app-secrets) no desenvolvimento local. Veja `env.example` para referência.
 
-### Desenvolvimento local (User Secrets)
+---
 
-Na pasta do Worker:
-
-```bash
-cd src/JobProcessor.Worker
-dotnet user-secrets init
-dotnet user-secrets set "Smtp:Enabled" "true"
-dotnet user-secrets set "Smtp:Host" "smtp-relay.brevo.com"
-dotnet user-secrets set "Smtp:User" "seu-usuario"
-dotnet user-secrets set "Smtp:Password" "sua-chave"
-dotnet user-secrets set "Smtp:FromEmail" "remetente@exemplo.com"
-```
-
-O arquivo `appsettings.Development.json` mantém `Enabled=false` como exemplo seguro.
-
-### Separação API / Worker
-
-A API apenas persiste jobs e publica na fila. O processamento ocorre em `JobProcessor.Worker`, um host separado que pode ser escalado horizontalmente (`docker-compose up --scale worker=N`), permitindo maior throughput sem aumentar a carga da API.
-
-## Testes (xUnit)
+## Testes
 
 ```bash
 dotnet test
 ```
 
-Em máquinas lentas ou se o `testhost` travar de execuções anteriores:
+Cobertura atual (xUnit):
+
+- `SendEmailJobHandlerTests` — validação de payload e comportamento do handler de e-mail
+- `GenerateReportJobHandlerTests` — validação de geração de relatório (PDF, CSV, Excel)
+- `JobExecutorTests` — roteamento correto por tipo de job
+
+Em ambientes lentos ou com conflito de `testhost`:
 
 ```powershell
 Get-Process testhost -ErrorAction SilentlyContinue | Stop-Process -Force
@@ -177,22 +289,23 @@ $env:VSTEST_CONNECTION_TIMEOUT = "600"
 dotnet test --settings tests/JobProcessor.Application.Tests/test.runsettings
 ```
 
-Os testes rodam em série (`xunit.runner.json`) para evitar crash do test host neste ambiente.
-
-Cobertura dos testes:
-- `SendEmailJobHandlerTests` — validação de payload de email
-- `GenerateReportJobHandlerTests` — validação de geração de relatório
-- `JobExecutorTests` — roteamento por tipo de job
+---
 
 ## Estrutura do projeto
 
 ```
-src/
-├── JobProcessor.API/           # Web API (controllers, DTOs)
-├── JobProcessor.Application/   # Casos de uso, handlers, JobExecutor
-├── JobProcessor.Domain/        # Entidades e enums
-├── JobProcessor.Infrastructure/# MongoDB, RabbitMQ, SMTP (MailKit)
-└── JobProcessor.Worker/        # Workers em segundo plano
+Backend/
+├── docker-compose.yml          # Orquestração completa (MongoDB, RabbitMQ, API, workers, frontend)
+├── Dockerfile.api              # Imagem da Web API
+├── Dockerfile.worker           # Imagem dos workers
+├── env.example                 # Variáveis de ambiente de referência
+├── rabbitmq.conf               # Configuração do RabbitMQ
+├── render.yaml                 # Deploy no Render.com
+└── src/
+    ├── JobProcessor.API/           # Web API — controllers, DTOs, Program.cs
+    ├── JobProcessor.Application/   # Casos de uso, handlers, JobExecutor, interfaces
+    ├── JobProcessor.Domain/        # Entidades (Job) e enums (JobStatus)
+    └── JobProcessor.Infrastructure/# MongoDB, RabbitMQ, SMTP/SendGrid
 tests/
-└── JobProcessor.Application.Tests/  # Testes xUnit dos handlers
+└── JobProcessor.Application.Tests/ # Testes xUnit
 ```

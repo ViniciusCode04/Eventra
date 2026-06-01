@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Worker\\JobProcessor.Worker.csproj": {}
+    "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Worker\\JobProcessor.Worker.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Application\\JobProcessor.Application.csproj": {
+    "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Application\\JobProcessor.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Application\\JobProcessor.Application.csproj",
+        "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Application\\JobProcessor.Application.csproj",
         "projectName": "JobProcessor.Application",
-        "projectPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Application\\JobProcessor.Application.csproj",
-        "packagesPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\cursor-sandbox-cache\\18c25f7411154d68a56ca54cf9de7774\\nuget",
-        "outputPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Application\\obj\\",
+        "projectPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Application\\JobProcessor.Application.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -33,8 +33,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj": {
-                "projectPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj"
+              "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj": {
+                "projectPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj"
               }
             }
           }
@@ -84,14 +84,14 @@
         }
       }
     },
-    "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj": {
+    "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj",
+        "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj",
         "projectName": "JobProcessor.Domain",
-        "projectPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj",
-        "packagesPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\cursor-sandbox-cache\\18c25f7411154d68a56ca54cf9de7774\\nuget",
-        "outputPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Domain\\obj\\",
+        "projectPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -150,14 +150,14 @@
         }
       }
     },
-    "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Infrastructure\\JobProcessor.Infrastructure.csproj": {
+    "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Infrastructure\\JobProcessor.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Infrastructure\\JobProcessor.Infrastructure.csproj",
+        "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Infrastructure\\JobProcessor.Infrastructure.csproj",
         "projectName": "JobProcessor.Infrastructure",
-        "projectPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Infrastructure\\JobProcessor.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\cursor-sandbox-cache\\18c25f7411154d68a56ca54cf9de7774\\nuget",
-        "outputPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Infrastructure\\obj\\",
+        "projectPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Infrastructure\\JobProcessor.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -179,11 +179,11 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Application\\JobProcessor.Application.csproj": {
-                "projectPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Application\\JobProcessor.Application.csproj"
+              "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Application\\JobProcessor.Application.csproj": {
+                "projectPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Application\\JobProcessor.Application.csproj"
               },
-              "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj": {
-                "projectPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj"
+              "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj": {
+                "projectPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Domain\\JobProcessor.Domain.csproj"
               }
             }
           }
@@ -253,14 +253,14 @@
         }
       }
     },
-    "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Worker\\JobProcessor.Worker.csproj": {
+    "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Worker\\JobProcessor.Worker.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Worker\\JobProcessor.Worker.csproj",
+        "projectUniqueName": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Worker\\JobProcessor.Worker.csproj",
         "projectName": "JobProcessor.Worker",
-        "projectPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Worker\\JobProcessor.Worker.csproj",
-        "packagesPath": "C:\\Users\\Administrator\\AppData\\Local\\Temp\\cursor-sandbox-cache\\18c25f7411154d68a56ca54cf9de7774\\nuget",
-        "outputPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Worker\\obj\\",
+        "projectPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Worker\\JobProcessor.Worker.csproj",
+        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Worker\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -282,8 +282,8 @@
           "net8.0": {
             "targetAlias": "net8.0",
             "projectReferences": {
-              "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Infrastructure\\JobProcessor.Infrastructure.csproj": {
-                "projectPath": "C:\\Users\\Administrator\\Desktop\\F360\\JobProcessor\\src\\JobProcessor.Infrastructure\\JobProcessor.Infrastructure.csproj"
+              "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Infrastructure\\JobProcessor.Infrastructure.csproj": {
+                "projectPath": "C:\\Users\\Administrator\\Desktop\\Eventra\\Backend\\src\\JobProcessor.Infrastructure\\JobProcessor.Infrastructure.csproj"
               }
             }
           }
