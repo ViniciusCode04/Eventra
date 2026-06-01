@@ -1,5 +1,7 @@
 # Eventra — Job Processor
 
+<img width="1408" height="768" alt="image" src="https://github.com/user-attachments/assets/7facbd6d-0e2c-4712-accd-27b3ef80dc82" />
+
 > Serviço distribuído de processamento de tarefas em background — desenvolvido como resposta ao desafio técnico de **Desenvolvedor Jr C# / ASP.NET** da **F360**.
 
 ![Stack](https://img.shields.io/badge/.NET-8-512BD4?style=flat-square&logo=dotnet)
