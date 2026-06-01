@@ -1,6 +1,8 @@
 version: '3.8'
 
 x-worker-config: &worker-config
+  env_file:
+    - .env
   build:
     context: .
     dockerfile: Dockerfile.worker
@@ -11,14 +13,18 @@ x-worker-config: &worker-config
     - RabbitMQ__Host=rabbitmq
     - RabbitMQ__User=guest
     - RabbitMQ__Password=guest
+    - RabbitMQ__VHost=/
     - Smtp__Enabled=true
     - Smtp__Host=smtp.gmail.com
     - Smtp__Port=587
-    - Smtp__User=custodiovinicius22@gmail.com
-    - Smtp__Password=brdk vycd lfuz jfxi
-    - Smtp__FromEmail=custodiovinicius22@gmail.com
+    - Smtp__User=${SMTP_USER}
+    - Smtp__Password=${SMTP_PASSWORD}
+    - Smtp__FromEmail=${SMTP_FROM_EMAIL}
     - Smtp__FromName=JobProcessor
     - Smtp__UseSsl=true
+    - SendGrid__ApiKey=${SENDGRID_API_KEY}
+    - SendGrid__FromEmail=${SENDGRID_FROM_EMAIL}
+    - SendGrid__FromName=Eventra
   depends_on:
     mongodb:
       condition: service_healthy
@@ -79,6 +85,7 @@ services:
       - RabbitMQ__Host=rabbitmq
       - RabbitMQ__User=guest
       - RabbitMQ__Password=guest
+      - RabbitMQ__VHost=/
     depends_on:
       mongodb:
         condition: service_healthy
@@ -106,7 +113,7 @@ services:
 
   eventra:
     build:
-      context: ../eventra
+      context: ../Frontend
       dockerfile: Dockerfile
       args:
         VITE_API_URL: ""

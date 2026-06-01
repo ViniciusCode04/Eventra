@@ -38,3 +38,6 @@ obj/
 
 # Vite cache
 .vite/
+
+# Env
+.env
