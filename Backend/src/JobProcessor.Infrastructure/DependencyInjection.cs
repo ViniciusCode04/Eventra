@@ -3,6 +3,7 @@ using JobProcessor.Domain.Entities;
 using JobProcessor.Infrastructure.Email;
 using JobProcessor.Infrastructure.Messaging;
 using JobProcessor.Infrastructure.Persistence;
+using JobProcessor.Infrastructure.Reports;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -40,7 +41,7 @@ public static class DependencyInjection
             var host = configuration["RabbitMQ:Host"] ?? "localhost";
             var user = configuration["RabbitMQ:User"] ?? "guest";
             var password = configuration["RabbitMQ:Password"] ?? "guest";
-            var vhost = configuration["RabbitMQ:VHost"] ?? user; // CloudAMQP usa user como vhost
+            var vhost = configuration["RabbitMQ:VHost"] ?? user;
 
             var factory = new ConnectionFactory
             {
@@ -70,6 +71,7 @@ public static class DependencyInjection
         });
 
         services.AddSingleton<IJobQueuePublisher, RabbitMQPublisher>();
+        services.AddScoped<IReportGenerator, ReportGenerator>();
 
         services.Configure<SmtpSettings>(configuration.GetSection(SmtpSettings.SectionName));
         services.AddSingleton<IEmailSender>(sp =>

@@ -1,11 +1,10 @@
 using JobProcessor.Application.Handlers;
 using JobProcessor.Application.Interfaces;
 using JobProcessor.Application.Services;
-using JobProcessor.Infrastructure.Reports;
 using Microsoft.Extensions.DependencyInjection;
- 
+
 namespace JobProcessor.Application;
- 
+
 public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
@@ -14,9 +13,7 @@ public static class DependencyInjection
         services.AddScoped<JobExecutor>();
         services.AddScoped<IJobHandler, SendEmailJobHandler>();
         services.AddScoped<IJobHandler, GenerateReportJobHandler>();
-        services.AddScoped<IReportGenerator, ReportGenerator>();
- 
+
         return services;
     }
 }
- 
