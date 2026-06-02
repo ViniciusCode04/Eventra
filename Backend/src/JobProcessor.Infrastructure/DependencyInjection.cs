@@ -77,15 +77,15 @@ public static class DependencyInjection
 
         services.AddSingleton<IEmailSender>(sp =>
         {
-            var sendGridApiKey = configuration["SendGrid:ApiKey"];
+            var brevoApiKey = configuration["Brevo:ApiKey"];
 
-            if (!string.IsNullOrWhiteSpace(sendGridApiKey))
+            if (!string.IsNullOrWhiteSpace(brevoApiKey))
             {
-                var fromEmail = configuration["SendGrid:FromEmail"] ?? string.Empty;
-                var fromName = configuration["SendGrid:FromName"] ?? "Eventra";
-                var logger = sp.GetRequiredService<ILogger<SendGridEmailSender>>();
+                var fromEmail = configuration["Brevo:FromEmail"] ?? string.Empty;
+                var fromName = configuration["Brevo:FromName"] ?? "Eventra";
+                var logger = sp.GetRequiredService<ILogger<BrevoEmailSender>>();
 
-                return new SendGridEmailSender(sendGridApiKey, fromEmail, fromName, logger);
+                return new BrevoEmailSender(brevoApiKey, fromEmail, fromName, logger);
             }
 
             var smtpSettings = sp.GetRequiredService<IOptions<SmtpSettings>>().Value;

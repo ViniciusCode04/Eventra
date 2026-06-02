@@ -22,9 +22,9 @@ x-worker-config: &worker-config
     - Smtp__FromEmail=${SMTP_FROM_EMAIL}
     - Smtp__FromName=JobProcessor
     - Smtp__UseSsl=true
-    - SendGrid__ApiKey=${SENDGRID_API_KEY}
-    - SendGrid__FromEmail=${SENDGRID_FROM_EMAIL}
-    - SendGrid__FromName=Eventra
+    - Brevo__ApiKey=${BREVO_API_KEY}
+    - Brevo__FromEmail=${BREVO_FROM_EMAIL}
+    - Brevo__FromName=${BREVO_FROM_NAME}
   depends_on:
     mongodb:
       condition: service_healthy
