@@ -101,7 +101,7 @@ POST /api/jobs
                     │        └─ "Pendente" → "EmProcessamento"
                     │
                     ├─► JobExecutor → IJobHandler (roteado por tipo)
-                    │        ├─ SendEmailJobHandler  (SMTP / SendGrid)
+                    │        ├─ SendEmailJobHandler  (Brevo / SMTP)
                     │        └─ GenerateReportJobHandler (PDF / Excel / CSV)
                     │
                     └─► MongoDB ──── "Concluido" ou "Erro" (com retry automático)
@@ -166,7 +166,7 @@ Dois Dockerfiles separados (`Dockerfile.api` e `Dockerfile.worker`) com `docker-
 |---------|-----------------|
 | `JobProcessor.Domain` | Entidades e enums — sem dependências externas |
 | `JobProcessor.Application` | Casos de uso, handlers, `JobExecutor`, interfaces |
-| `JobProcessor.Infrastructure` | MongoDB, RabbitMQ, SMTP, SendGrid, relatórios |
+| `JobProcessor.Infrastructure` | MongoDB, RabbitMQ, Brevo, SMTP, relatórios |
 | `JobProcessor.API` | Controllers, DTOs, configuração do host |
 
 ### Roteamento de handlers por tipo
@@ -195,24 +195,26 @@ Os arquivos ficam disponíveis via `GET /api/jobs/{id}/report` para download ime
 ### E-mail com fallback em camadas
 
 ```
-SendGrid:ApiKey configurado? → SendGridEmailSender (API HTTP — funciona em qualquer host)
-SMTP configurado?            → SmtpEmailSender (MailKit)
-Nenhum?                      → MockEmailSender (log apenas — padrão local)
+Brevo:ApiKey configurado? → BrevoEmailSender (API HTTP — funciona em qualquer host)
+SMTP configurado?         → SmtpEmailSender (MailKit)
+Nenhum?                   → MockEmailSender (log apenas — padrão local)
 ```
 
 ---
 
 ## 📧 Configuração de e-mail
 
-### SendGrid (recomendado para produção)
+### Brevo (recomendado para produção)
 
 ```env
-SendGrid__ApiKey=sua-chave
-SendGrid__FromEmail=remetente@seudominio.com
-SendGrid__FromName=Eventra
+Brevo__ApiKey=sua-chave
+Brevo__FromEmail=remetente@seudominio.com
+Brevo__FromName=Eventra
 ```
 
-### SMTP (Gmail, Brevo, etc.)
+> O remetente precisa estar verificado no painel do Brevo em **Senders & IP → Senders**. A restrição por IP deve estar desativada em **Security → Authorised IPs** para ambientes com IP dinâmico (Railway, Render, etc.).
+
+### SMTP (Gmail, etc.)
 
 ```yaml
 - Smtp__Enabled=true
